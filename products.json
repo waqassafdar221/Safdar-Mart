@@ -59,7 +59,6 @@
     "discountPercent": 10,
     "currency": "Rs."
   },
-
   {
     "name": "Dettol Antiseptic Liquid",
     "size": "500ml",
@@ -120,7 +119,6 @@
     "discountPercent": 20,
     "currency": "Rs."
   },
-
   {
     "name": "Pampers Baby-Dry Pants",
     "size": "M, 46s",
@@ -179,7 +177,6 @@
     "newPrice": 745,
     "currency": "Rs."
   },
-
   {
     "name": "Ensure Vanilla Powder",
     "size": "400g",
@@ -238,6 +235,12 @@
     "oldPrice": 11500,
     "newPrice": 9775,
     "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "test",
+    "image": "images/test.jpg",
+    "newPrice": 200,
     "currency": "Rs."
   }
 ]
