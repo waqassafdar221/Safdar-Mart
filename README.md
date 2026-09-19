@@ -24,6 +24,10 @@ products.json     ← your products and prices (edit this)
 settings.json     ← store details, promo lines, all board wording (edit this)
 images/           logo, hero artwork + 24 dummy product photos
 fonts/            self-hosted Poppins + Caveat (.woff2)
+admin.html        the admin panel — add/edit products in a browser
+admin.css
+admin.js
+prepare-photos.py turns a whole folder of phone photos into board-ready images
 README.md         this file
 reference.png     the design this board was built to match (safe to delete)
 hero section.png  the original hero artwork (safe to delete — already cut out)
@@ -127,7 +131,53 @@ long-running TV browsers healthy, and re-checks the JSON files every 15 minutes
 
 ---
 
-## 4. Updating prices and products later
+## 4. The admin panel — adding and editing products
+
+Open **`admin.html`** to manage products in a browser instead of editing JSON by hand.
+It runs from the same local server:
+
+```bash
+npx serve .
+```
+
+then open <http://localhost:3000/admin.html>.
+
+You get a list of every product on the left, and an editor on the right with a **live
+preview of the card exactly as the TV draws it**. You can:
+
+- **Add a product** — photo, name, pack size, category, price, and an optional "was"
+  price
+- **Edit or delete** any existing product
+- **Reorder** with the ↑ ↓ buttons — the list is split into pages of 6 with a heading
+  for each, so you can see which products land on which page
+- Drop in a photo and it is **trimmed, centred on white and saved as a 700 × 700 JPEG**
+  automatically — the same treatment `prepare-photos.py` applies
+
+**The discount badge fills itself in.** Type a price and a "was" price and the
+percentage is worked out for you. Clear the percentage box to hide the red badge on
+that card, even when both prices are set.
+
+### Saving your changes
+
+**In Chrome or Edge** — click **Connect project folder** once and pick the folder
+containing `index.html`. From then on **Save changes** writes `products.json` and any
+new photos straight into your project. Nothing to move by hand.
+
+**In Safari or Firefox** — those browsers cannot write to a folder, so **Save changes**
+hands you the files as downloads instead. Put `products.json` in the project folder and
+the photos in `images/`, replacing what is there.
+
+Either way the last step is the same: **redeploy** by dragging the folder to Netlify
+(see section 2), otherwise the TV keeps showing the old prices.
+
+> The panel only ever edits your local copy — it cannot change the live site by itself,
+> and there is no login because there is nothing behind it to protect. If you would
+> rather it not be on the public URL at all, delete `admin.html`, `admin.css` and
+> `admin.js` before you deploy; the board does not use them.
+
+---
+
+## 5. Updating prices and products later
 
 Everything you will ever change day-to-day is in the two JSON files. Edit them in any
 plain text editor (TextEdit in **Format → Make Plain Text**, or VS Code).
@@ -237,39 +287,79 @@ the TV. If you want it instantly, reload the page on the TV browser.
 
 ---
 
-## 5. Adding real product photos
+## 6. Adding real product photos
 
-The 24 images in `images/` are **stylised dummy mockups** — simple drawn packs on a
-white background, there so the board looks complete before you have real photos.
+The 24 images in `images/` are **stylised placeholder mockups** — simple drawn packs
+on a white background, there so the board looks complete before you have real photos.
 Replace them at your own pace; the board does not care which are real.
 
-Drop your photos into the **`images/`** folder and point each product's `image` field
-at the filename:
+### Getting real product photos
 
-```json
-"image": "images/panadol.jpg"
+**Photograph your own stock.** It is the fastest route, it costs nothing, the images
+are accurate to what you actually sell, and they are unambiguously yours to use.
+Product photos you find on Google or on e-commerce sites belong to the brands and
+are not licensed for you to redistribute on a public in-store display.
+
+If you would rather have official brand photography, ask your **distributor or
+supplier** — most keep a retailer image pack and will hand it over for in-store use.
+That is the licensed route.
+
+**Shooting them yourself — 20 minutes for all 24:**
+
+1. Tape a sheet of plain white A4/A3 paper to a wall so it curves onto the table.
+2. Stand near a window. Daylight from the side, no flash — flash blows out packaging.
+3. Put one product in the middle, phone roughly level with the product, and fill
+   most of the frame. Do not worry about centring it perfectly.
+4. One photo per product. Name it exactly as `products.json` expects.
+
+Run this to see the exact filenames to use:
+
+```bash
+python3 prepare-photos.py --list
 ```
 
-The name in `products.json` must match the file exactly, including capitals and the
-`.jpg` / `.png` ending.
+**Then let the script clean them up.** Put every photo in a `photos-in/` folder and run:
 
-**Recommended photo specs:**
+```bash
+python3 prepare-photos.py
+```
+
+It straightens each photo using the phone's rotation tag, crops away the empty space
+around the product, centres it on a 700 x 700 white square, compresses it, and writes
+it into `images/` — overwriting the placeholder. It then tells you which products are
+still on a dummy image, so you can see what is left to shoot.
+
+If a photo has a busy background (a shelf, a countertop) rather than plain paper:
+
+```bash
+python3 prepare-photos.py --cutout
+```
+
+That cuts the product out and drops it onto white. It works well for a single product
+filling the frame; for anything complicated, re-shoot it on paper instead — that is
+quicker than fighting it. `--cutout` needs one extra package:
+`python3 -m pip install opencv-python`.
+
+### Doing it by hand instead
+
+You do not have to use the script. Any image works as long as it is roughly square
+and on a white background:
 
 | | |
 |---|---|
 | Aspect ratio | **Square (1:1)** — the card's image area is roughly square |
-| Size | **700 × 700 px** (1000 × 1000 px if you want it sharp on a 4K TV) |
+| Size | **700 x 700 px** (1000 x 1000 px for a 4K TV) |
 | Background | **Plain white**, product centred with a little breathing room |
 | Format | JPEG for photos, PNG if you need transparency |
-| File size | Keep under ~150 KB each so the board loads fast on shop Wi-Fi |
+| File size | Under ~150 KB each so the board loads fast on shop Wi-Fi |
 
 Photos are displayed with "contain" scaling, so a photo that is not exactly square is
 never cropped or stretched — it just letterboxes into the card. 4:3 and 3:4 both work
 fine. Very wide or very tall photos will look small, so crop them closer to square.
 
-**The easiest way to swap one in:** save your photo over the existing dummy file,
+**The easiest way to swap one in:** save your photo over the existing placeholder,
 keeping the same filename (e.g. replace `images/panadol.jpg` with your own
-`panadol.jpg`). Then you do not need to touch `products.json` at all.
+`panadol.jpg`). Then you never touch `products.json` at all.
 
 If a photo is missing, misspelled, or fails to download, that card shows a soft tinted
 block with the product name instead. Nothing breaks, so you can add photos gradually.
@@ -300,7 +390,7 @@ illustration takes its place, so the banner is never empty.
 
 ---
 
-## 6. Design notes
+## 7. Design notes
 
 Colours are defined once at the top of `style.css` under `:root`, sampled from
 `reference.png`:

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Admin — Safdar &amp; Sons</title>
+<link rel="icon" href="images/logo.png">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- shown until the admin signs in (only when a backend is present) -->
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gate-form">
+    <img src="images/logo-mark.png" alt="" class="gate-mark">
+    <h1>Board Admin</h1>
+    <p class="gate-sub">Sign in to manage the products on the shop TV.</p>
+    <label class="field">
+      <span class="lbl">Password</span>
+      <input type="password" id="gate-pw" autocomplete="current-password" required>
+    </label>
+    <p class="gate-err" id="gate-err" hidden></p>
+    <button type="submit" class="btn btn-primary gate-btn" id="gate-btn">Sign in</button>
+  </form>
+</div>
+
+<header class="top">
+  <div class="brand">
+    <img src="images/logo-mark.png" alt="" class="brand-mark">
+    <div>
+      <div class="brand-title">Board Admin</div>
+      <div class="brand-sub">Safdar &amp; Sons Pharmacy + Mart</div>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <span class="folder" id="folder-state">Not connected</span>
+    <button class="btn btn-ghost" id="btn-connect">Connect project folder</button>
+    <button class="btn btn-primary" id="btn-save" disabled>Save changes</button>
+    <button class="btn btn-ghost" id="btn-logout" hidden>Sign out</button>
+  </div>
+</header>
+
+<div class="statusbar">
+  <span id="stat-counts">—</span>
+  <span class="dot"></span>
+  <span id="stat-dirty" class="clean">All changes saved</span>
+  <span class="grow"></span>
+  <a class="link" href="index.html" target="_blank" rel="noopener">Open the board ↗</a>
+</div>
+
+<main class="wrap">
+
+  <!-- ─────────────── product list ─────────────── -->
+  <section class="pane pane-list">
+    <div class="pane-head">
+      <h2>Products</h2>
+      <button class="btn btn-primary btn-sm" id="btn-add">+ Add product</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <!-- ─────────────── editor ─────────────── -->
+  <section class="pane pane-edit">
+    <div class="pane-head"><h2 id="edit-title">Add product</h2></div>
+
+    <div class="empty" id="edit-empty">
+      <p>Select a product on the left to edit it,<br>or add a new one.</p>
+    </div>
+
+    <form class="form" id="form" hidden>
+
+      <!-- live preview of the card exactly as the TV draws it -->
+      <div class="preview-wrap">
+        <div class="preview-card" id="pv">
+          <div class="pv-badge" id="pv-badge" hidden><span id="pv-pct">20%</span><span>OFF</span></div>
+          <div class="pv-media" id="pv-media"></div>
+          <p class="pv-name" id="pv-name">Product name</p>
+          <p class="pv-old" id="pv-old"></p>
+          <div class="pv-price"><span class="pv-cur" id="pv-cur">Rs.</span><span class="pv-new" id="pv-new">0</span></div>
+        </div>
+        <p class="preview-cap">Live preview</p>
+      </div>
+
+      <div class="fields">
+
+        <label class="field">
+          <span class="lbl">Product image</span>
+          <div class="drop" id="drop" tabindex="0">
+            <input type="file" id="file" accept="image/*" hidden>
+            <span id="drop-text">Drop a photo here, or click to choose</span>
+          </div>
+          <span class="hint" id="img-hint">Any photo works — it is trimmed, centred on white
+            and saved as a 700×700 JPEG.</span>
+        </label>
+
+        <label class="field">
+          <span class="lbl">Name <b class="req">*</b></span>
+          <input type="text" id="f-name" placeholder="Panadol 500mg Tablets" autocomplete="off">
+          <span class="hint">The first word shows in bold on the card.</span>
+        </label>
+
+        <div class="row">
+          <label class="field">
+            <span class="lbl">Pack size</span>
+            <input type="text" id="f-size" placeholder="20s" autocomplete="off">
+          </label>
+          <label class="field">
+            <span class="lbl">Category</span>
+            <select id="f-cat"></select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label class="field">
+            <span class="lbl">Price <b class="req">*</b></span>
+            <div class="money"><span class="money-cur" id="cur-1">Rs.</span>
+              <input type="number" id="f-new" min="0" step="any" placeholder="120"></div>
+          </label>
+          <label class="field">
+            <span class="lbl">Was <span class="opt">optional</span></span>
+            <div class="money"><span class="money-cur" id="cur-2">Rs.</span>
+              <input type="number" id="f-old" min="0" step="any" placeholder="150"></div>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="lbl">Discount badge <span class="opt">optional</span></span>
+          <div class="pct">
+            <input type="number" id="f-pct" min="0" max="99" step="1" placeholder="—">
+            <span class="pct-sign">%</span>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-autopct">Recalculate</button>
+          </div>
+          <span class="hint" id="pct-hint">Filled in automatically from the two prices.
+            Clear it to hide the red badge.</span>
+        </label>
+
+        <p class="warn" id="warn" hidden></p>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+          <span class="grow"></span>
+          <button type="button" class="btn btn-ghost" id="btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-done">Done</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</main>
+
+<!-- save results / fallback downloads -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-card">
+    <h3 id="sheet-title">Saved</h3>
+    <div id="sheet-body"></div>
+    <div class="sheet-actions">
+      <button class="btn btn-primary" id="sheet-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

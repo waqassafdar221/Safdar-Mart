@@ -92,6 +92,7 @@
   var pendingData = null;
   var dataStamp   = '';
   var lastError   = '';
+  var usingApi    = false;
 
   var DEBUG = /(?:^|[?&])debug=1(?:&|$)/.test(window.location.search);
 
@@ -155,6 +156,22 @@
       if (!res.ok) { throw new Error(path + ' → HTTP ' + res.status); }
       return res.json();
     });
+  }
+
+  /* Live data comes from the API once a database is attached. Without one —
+     previewing locally with `npx serve .`, or before the backend is set up —
+     fall back to the bundled JSON file so the board still runs. */
+  function loadData(apiPath, filePath) {
+    return loadJSON(apiPath)
+      .then(function (data) {
+        if (data && data.fallback) { throw new Error('api asked for fallback'); }
+        usingApi = true;
+        return data;
+      })
+      .catch(function () {
+        usingApi = false;
+        return loadJSON(filePath);
+      });
   }
 
   /* ------------------------------ Rendering ----------------------------- */
@@ -488,6 +505,7 @@
       'viewport ' + window.innerWidth + '×' + window.innerHeight +
         '   ·   1rem ' + rootPx().toFixed(2) + 'px\n' +
       'fits ' + (overflow <= 1 ? 'yes' : 'NO (+' + overflow + 'px)') +
+        '   ·   source ' + (usingApi ? 'api' : 'static files') +
         '   ·   data ' + (lastError ? 'ERROR ' + lastError : 'ok');
   }
 
@@ -497,7 +515,8 @@
   }
 
   function load(isInitial, attempt) {
-    Promise.all([loadJSON('settings.json'), loadJSON('products.json')])
+    Promise.all([loadData('/api/settings', 'settings.json'),
+                 loadData('/api/products', 'products.json')])
       .then(function (res) {
         lastError = '';
         var stamp = fingerprint(res[0], res[1]);
@@ -518,7 +537,7 @@
 
         var tries = attempt || 1;
         showStatus('Loading offers…',
-          'Waiting for products.json / settings.json (attempt ' + tries + ').\n' +
+          'Waiting for the product list (attempt ' + tries + ').\n' +
           'If you opened index.html straight from the file system, start a local ' +
           'server instead: npx serve .   —   ' + lastError);
 

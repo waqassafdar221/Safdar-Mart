@@ -1,0 +1,17 @@
+{
+  "name": "safdar-sons-board",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "In-store signage board + admin panel for Safdar & Sons Pharmacy + Mart",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "vercel dev",
+    "seed": "node scripts/seed.mjs",
+    "secret": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@vercel/blob": "^2.0.0"
+  }
+}
