@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "In-store signage board + admin panel for Safdar & Sons Pharmacy + Mart",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vercel dev",
     "seed": "node scripts/seed.mjs",

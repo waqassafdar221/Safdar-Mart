@@ -91,12 +91,21 @@
   }
 
   /* ------------------------------ the API ------------------------------- */
-  function api(path, opts) {
-    return fetch(path, Object.assign({
+  /* Every call is time-boxed: a stalled network must surface as an error the
+     shopkeeper can act on, never as a Save button stuck on "Saving…". */
+  function api(path, opts, timeoutMs) {
+    var ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    var limit = timeoutMs || 30000;
+    var timer = setTimeout(function () { if (ctl) { ctl.abort(); } }, limit);
+
+    var init = Object.assign({
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
       cache: 'no-store'
-    }, opts || {})).then(function (r) {
+    }, opts || {});
+    if (ctl) { init.signal = ctl.signal; }
+
+    return fetch(path, init).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (body) {
         if (!r.ok) {
           var e = new Error(body.error || ('HTTP ' + r.status));
@@ -105,7 +114,18 @@
         }
         return body;
       });
-    });
+    }).catch(function (err) {
+      if (err && (err.name === 'AbortError' || err.name === 'TimeoutError')) {
+        var t = new Error('Timed out after ' + Math.round(limit / 1000) +
+                          's — check your internet connection and try again.');
+        t.timeout = true;
+        throw t;
+      }
+      throw err;
+    }).then(
+      function (v) { clearTimeout(timer); return v; },
+      function (e) { clearTimeout(timer); throw e; }
+    );
   }
 
   function blobToDataUrl(blob) {
@@ -467,11 +487,15 @@
 
     var names = Object.keys(pending);
     var step = Promise.resolve();
+    var done = 0;
 
     names.forEach(function (tmpPath) {
       step = step.then(function () {
         var owner = products.filter(function (p) { return p.image === tmpPath; })[0];
         var label = owner ? slug(owner.name) : 'product';
+        btn.textContent = names.length > 1
+          ? 'Uploading ' + (done + 1) + ' of ' + names.length + '…'
+          : 'Uploading photo…';
         return blobToDataUrl(pending[tmpPath]).then(function (dataUrl) {
           return api('/api/upload', {
             method: 'POST',
@@ -480,8 +504,9 @@
               dataUrl: dataUrl,
               replace: owner && owner._replaces ? owner._replaces : undefined
             })
-          });
+          }, 90000);                       /* photos need a longer budget */
         }).then(function (out) {
+          done++;
           /* point every product that used the temp path at the hosted URL */
           products.forEach(function (p) {
             if (p.image === tmpPath) { p.image = out.url; delete p._replaces; }
@@ -492,7 +517,8 @@
     });
 
     step.then(function () {
-      return api('/api/products', { method: 'PUT', body: jsonText() });
+      btn.textContent = 'Saving prices…';
+      return api('/api/products', { method: 'PUT', body: jsonText() }, 45000);
     }).then(function (out) {
       markDirty(false);
       renderList();
@@ -501,7 +527,7 @@
       if (err.status === 401) {
         showGate('Your session expired. Sign in again.');
       } else {
-        toast('Could not save: ' + err.message, true);
+        toast('Could not save: ' + err.message + ' Your changes are still here — try again.', true);
       }
     }).then(function () {
       btn.textContent = 'Save changes';
