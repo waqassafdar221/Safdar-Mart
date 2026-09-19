@@ -1,0 +1,243 @@
+[
+  {
+    "name": "Panadol 500mg Tablets",
+    "size": "20s",
+    "category": "Medicines",
+    "image": "images/panadol.jpg",
+    "oldPrice": 150,
+    "newPrice": 120,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Brufen 400mg Tablets",
+    "size": "20s",
+    "category": "Medicines",
+    "image": "images/brufen.jpg",
+    "oldPrice": 210,
+    "newPrice": 178,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Disprin Tablets",
+    "size": "10s",
+    "category": "Medicines",
+    "image": "images/disprin.jpg",
+    "oldPrice": 60,
+    "newPrice": 48,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Augmentin 625mg Tablets",
+    "size": "6s",
+    "category": "Medicines",
+    "image": "images/augmentin.jpg",
+    "oldPrice": 540,
+    "newPrice": 486,
+    "discountPercent": 10,
+    "currency": "Rs."
+  },
+  {
+    "name": "Calpol Syrup 120mg",
+    "size": "60ml",
+    "category": "Medicines",
+    "image": "images/calpol.jpg",
+    "oldPrice": 185,
+    "newPrice": 155,
+    "discountPercent": 16,
+    "currency": "Rs."
+  },
+  {
+    "name": "Ventolin Inhaler 100mcg",
+    "size": "200 Doses",
+    "category": "Medicines",
+    "image": "images/ventolin.jpg",
+    "oldPrice": 690,
+    "newPrice": 620,
+    "discountPercent": 10,
+    "currency": "Rs."
+  },
+
+  {
+    "name": "Dettol Antiseptic Liquid",
+    "size": "500ml",
+    "category": "Personal Care",
+    "image": "images/dettol.jpg",
+    "oldPrice": 950,
+    "newPrice": 760,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Safeguard White Soap",
+    "size": "3 x 115g",
+    "category": "Personal Care",
+    "image": "images/safeguard.jpg",
+    "oldPrice": 495,
+    "newPrice": 420,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Head & Shoulders Shampoo",
+    "size": "360ml",
+    "category": "Personal Care",
+    "image": "images/head-shoulders.jpg",
+    "oldPrice": 1450,
+    "newPrice": 1160,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Colgate Cavity Protection",
+    "size": "200g",
+    "category": "Personal Care",
+    "image": "images/colgate.jpg",
+    "oldPrice": 430,
+    "newPrice": 365,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Gillette Mach3 Cartridges",
+    "size": "4s",
+    "category": "Personal Care",
+    "image": "images/mach3.jpg",
+    "oldPrice": 1890,
+    "newPrice": 1700,
+    "discountPercent": 10,
+    "currency": "Rs."
+  },
+  {
+    "name": "Vaseline Petroleum Jelly",
+    "size": "100ml",
+    "category": "Personal Care",
+    "image": "images/vaseline.jpg",
+    "oldPrice": 640,
+    "newPrice": 512,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+
+  {
+    "name": "Pampers Baby-Dry Pants",
+    "size": "M, 46s",
+    "category": "Baby Care",
+    "image": "images/pampers-medium.jpg",
+    "oldPrice": 2350,
+    "newPrice": 1998,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Johnson's Baby Shampoo",
+    "size": "200ml",
+    "category": "Baby Care",
+    "image": "images/johnsons-shampoo.jpg",
+    "oldPrice": 780,
+    "newPrice": 663,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Nan Pro 1 Formula",
+    "size": "400g",
+    "category": "Baby Care",
+    "image": "images/nan-pro-1.jpg",
+    "oldPrice": 2980,
+    "newPrice": 2830,
+    "discountPercent": 5,
+    "currency": "Rs."
+  },
+  {
+    "name": "Cerelac Wheat & Milk",
+    "size": "350g",
+    "category": "Baby Care",
+    "image": "images/cerelac.jpg",
+    "oldPrice": 1290,
+    "newPrice": 1096,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Huggies Baby Wipes",
+    "size": "64s",
+    "category": "Baby Care",
+    "image": "images/huggies-wipes.jpg",
+    "oldPrice": 520,
+    "newPrice": 416,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Johnson's Baby Lotion",
+    "size": "200ml",
+    "category": "Baby Care",
+    "image": "images/johnsons-lotion.jpg",
+    "newPrice": 745,
+    "currency": "Rs."
+  },
+
+  {
+    "name": "Ensure Vanilla Powder",
+    "size": "400g",
+    "category": "Health & Wellness",
+    "image": "images/ensure.jpg",
+    "oldPrice": 3450,
+    "newPrice": 2932,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Centrum Multivitamin",
+    "size": "30s",
+    "category": "Health & Wellness",
+    "image": "images/centrum.jpg",
+    "oldPrice": 2100,
+    "newPrice": 1785,
+    "discountPercent": 15,
+    "currency": "Rs."
+  },
+  {
+    "name": "Surbex-Z Tablets",
+    "size": "30s",
+    "category": "Health & Wellness",
+    "image": "images/surbex-z.jpg",
+    "oldPrice": 720,
+    "newPrice": 648,
+    "discountPercent": 10,
+    "currency": "Rs."
+  },
+  {
+    "name": "Qarshi Johar Joshanda",
+    "size": "30s",
+    "category": "Health & Wellness",
+    "image": "images/joshanda.jpg",
+    "oldPrice": 450,
+    "newPrice": 360,
+    "discountPercent": 20,
+    "currency": "Rs."
+  },
+  {
+    "name": "Accu-Chek Active Strips",
+    "size": "50s",
+    "category": "Health & Wellness",
+    "image": "images/accu-chek-strips.jpg",
+    "oldPrice": 3200,
+    "newPrice": 2880,
+    "discountPercent": 10,
+    "currency": "Rs."
+  },
+  {
+    "name": "Omron Digital BP Monitor",
+    "size": "1 Unit",
+    "category": "Health & Wellness",
+    "image": "images/omron-bp.jpg",
+    "oldPrice": 11500,
+    "newPrice": 9775,
+    "discountPercent": 15,
+    "currency": "Rs."
+  }
+]

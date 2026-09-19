@@ -1,0 +1,55 @@
+{
+  "storeName": "SAFDAR & SONS",
+  "pharmacyLabel": "PHARMACY",
+  "martLabel": "+ MART",
+  "tagline": "Your Health\nOur Priority",
+
+  "address": "Main Bazaar Road, Near Civil Hospital, Lahore",
+  "phone": "0300-1234567",
+  "promoLines": [
+    "Free home delivery on orders above Rs. 2,000",
+    "Free blood pressure & sugar check — every day, 5 PM to 8 PM",
+    "Baby care corner — diapers, formula milk & wipes always in stock",
+    "Genuine medicines only — sourced directly from authorised distributors",
+    "Open 7 days a week, 9:00 AM to 11:00 PM"
+  ],
+
+  "secondsPerPage": 8,
+  "currency": "Rs.",
+  "refreshMinutes": 15,
+  "reloadHours": 12,
+
+  "headerPanel": { "line1": "Better Care", "line2": "Brighter Lives" },
+  "trustBadges": [
+    { "icon": "shield", "line1": "Genuine",     "line2": "Products"   },
+    { "icon": "family", "line1": "Healthy",     "line2": "Families"   },
+    { "icon": "cart",   "line1": "Everyday",    "line2": "Essentials" },
+    { "icon": "heart",  "line1": "A Healthier", "line2": "Tomorrow"   }
+  ],
+
+  "heroTitleTop": "EVERYDAY",
+  "heroTitleBottom": "ESSENTIALS",
+  "heroSubline": "Quality Products | Great Prices | Healthier You",
+  "heroScript": "More Than a Pharmacy\nA Part of Your Family",
+  "heroBadge": { "line1": "SHOP HEALTHY", "line2": "LIVE BETTER" },
+  "heroImage": "images/hero.png",
+
+  "dealsTitle": "TODAY'S DEALS",
+  "dealsScript": "Same Care. Better Savings.",
+  "offersValidTill": "30 Apr 2025",
+  "dealsNote": "While Stocks Last",
+
+  "categories": [
+    { "icon": "capsule", "label": "Medicines"           },
+    { "icon": "bottle",  "label": "Personal Care"       },
+    { "icon": "baby",    "label": "Baby Care"           },
+    { "icon": "pulse",   "label": "Health & Wellness"   },
+    { "icon": "grocery", "label": "Grocery & Household" },
+    { "icon": "jar",     "label": "Nutrition"           },
+    { "icon": "lotus",   "label": "Beauty"              }
+  ],
+  "categoryPanel": { "line1": "Good Health", "line2": "Brighter Days" },
+
+  "footerTag": "Trusted Products. Happier Lives.",
+  "footerNote": "Follow Us for More Offers"
+}
