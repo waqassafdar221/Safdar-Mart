@@ -148,20 +148,31 @@ long-running TV browsers healthy, and re-checks the JSON files every 15 minutes
 
 ---
 
-## 4. Deploying the backend (so the admin panel works online)
+## 4. The backend — already live
 
-Sections 1–3 give you a board that reads files from the folder. To edit products
-**from any browser, without redeploying**, the project also ships a backend:
+This is deployed and running. You do not need to set it up again.
 
-| Piece | What it does |
+| | |
 |---|---|
-| **Neon Postgres** | stores the products and settings |
-| **Vercel Blob** | stores the product photos you upload |
-| `api/` | the endpoints the board and admin panel talk to |
-| Password sign-in | keeps strangers out of your admin panel |
+| **Board (for the TV)** | https://safdar-sons-board.vercel.app |
+| **Admin panel** | https://safdar-sons-board.vercel.app/admin.html |
+| **Password** | `marble-willow-cedar-2301` — change it, see below |
+| Database | Neon Postgres `neon-violet-diamond` — holds the products |
+| Image store | Vercel Blob `safdar-board-images` — holds uploaded photos |
+| Project | `safdar-sons-board` on Vercel, auto-deploys from `main` |
 
-Once it is live: you open `/admin.html` on any device, sign in, change a price,
-and the TV picks it up within about a minute. **No redeploying, no file shuffling.**
+Open the admin panel on your phone, sign in, change a price, hit **Save changes**.
+The TV picks it up within about a minute. Nothing to redeploy.
+
+### Changing the password
+
+```bash
+vercel env rm ADMIN_PASSWORD production
+vercel env add ADMIN_PASSWORD production      # type the new one
+vercel deploy --prod
+```
+
+### If you ever rebuild this from scratch
 
 ### One-time setup
 
