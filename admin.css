@@ -22,6 +22,9 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;}
+/* class rules like .btn{display:inline-flex} outrank the UA [hidden] rule,
+   so state the intent once and let it win everywhere */
+[hidden]{display:none !important;}
 html,body{margin:0;padding:0;}
 body{
   font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
