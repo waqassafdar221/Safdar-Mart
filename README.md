@@ -27,6 +27,10 @@ fonts/            self-hosted Poppins + Caveat (.woff2)
 admin.html        the admin panel — add/edit products in a browser
 admin.css
 admin.js
+api/              the backend: products, settings, image upload, sign-in
+scripts/seed.mjs  loads products.json into the database, once
+package.json      backend dependencies
+vercel.json       cache headers
 prepare-photos.py turns a whole folder of phone photos into board-ready images
 README.md         this file
 reference.png     the design this board was built to match (safe to delete)
@@ -74,7 +78,18 @@ visible UI at all besides the page counter.
 
 ---
 
-## 2. Deploy to Netlify (drag and drop, no CLI)
+## 2. Deploy
+
+**Deploying to Vercel? Skip to section 4** — that sets up the board *and* the online
+admin panel in one go, and is the right path if you want to change prices without
+redeploying.
+
+This section covers the simplest possible deploy: the board only, as static files, by
+dragging a folder. It gives you a working TV board in two minutes, but the admin panel
+will only edit your local copy — the `api/` backend needs Vercel (Netlify uses a
+different function format and will ignore it).
+
+### Netlify (drag and drop, no CLI)
 
 1. Go to <https://app.netlify.com/drop> and sign in (a free account is enough).
 2. Open Finder and find this project folder (the one containing `index.html`).
@@ -88,7 +103,9 @@ visible UI at all besides the page counter.
 
 > Keep that URL somewhere safe — you will re-open this same page to redeploy later.
 
-### The same thing on Vercel
+### Static-only on Vercel
+
+Use this only if you do *not* want the backend. For the full thing, use section 4.
 
 1. Go to <https://vercel.com/new> and sign in.
 2. Pick the option to deploy without a Git repository — on the New Project screen
@@ -98,8 +115,8 @@ visible UI at all besides the page counter.
    and click **Deploy**.
 4. You get a URL like `https://safdar-sons-board.vercel.app`.
 
-Netlify Drop is the simpler of the two for a folder with no Git repo, so start there
-unless you already use Vercel.
+Either way, this static route means prices change by editing the files and
+redeploying. **Section 4 removes that step.**
 
 ---
 
@@ -131,10 +148,103 @@ long-running TV browsers healthy, and re-checks the JSON files every 15 minutes
 
 ---
 
-## 4. The admin panel — adding and editing products
+## 4. Deploying the backend (so the admin panel works online)
+
+Sections 1–3 give you a board that reads files from the folder. To edit products
+**from any browser, without redeploying**, the project also ships a backend:
+
+| Piece | What it does |
+|---|---|
+| **Neon Postgres** | stores the products and settings |
+| **Vercel Blob** | stores the product photos you upload |
+| `api/` | the endpoints the board and admin panel talk to |
+| Password sign-in | keeps strangers out of your admin panel |
+
+Once it is live: you open `/admin.html` on any device, sign in, change a price,
+and the TV picks it up within about a minute. **No redeploying, no file shuffling.**
+
+### One-time setup
+
+Run these from the project folder. It takes about five minutes.
+
+```bash
+# 1. sign in and link the folder to a Vercel project
+vercel login
+vercel link
+
+# 2. add the database (pick the free plan when asked)
+vercel integration add neon
+
+# 3. add the image store
+vercel blob create-store safdar-board-images
+
+# 4. set your admin password and a signing secret
+#    pick a long password — it is the only thing protecting the panel
+vercel env add ADMIN_PASSWORD production
+vercel env add SESSION_SECRET production        # paste the output of: npm run secret
+
+# 5. load your current 24 products into the database
+vercel env pull .env.local
+npm install
+npm run seed
+
+# 6. ship it
+vercel deploy --prod
+```
+
+`npm run secret` prints a fresh random signing secret — paste that into step 4 when
+it asks for `SESSION_SECRET`. Do not reuse your password for it.
+
+> **Add the two env vars to Preview and Development too** if you want `vercel dev` to
+> work locally: repeat step 4 with `preview` and `development` in place of
+> `production`, or set them once in **Project → Settings → Environment Variables**
+> with all three environments ticked.
+
+### After that
+
+- **Board:** `https://your-project.vercel.app/`
+- **Admin:** `https://your-project.vercel.app/admin.html`
+
+Bookmark the admin URL on your phone — it works fine on a phone screen.
+
+### How changes reach the TV
+
+You save in the admin panel → the API writes to Neon and Blob → the board re-checks
+every `refreshMinutes` (15 by default) and swaps the new prices in at the next page
+turn. To make it quicker, lower `refreshMinutes` to `1` in your settings.
+
+### If something is not set up yet
+
+The board and panel degrade instead of breaking:
+
+- **No database attached** — the board falls back to the bundled `products.json`, and
+  the admin panel goes back to editing local files. Nothing goes blank on the TV.
+- **No `ADMIN_PASSWORD`** — the panel refuses to sign anyone in, rather than letting
+  everyone in.
+- **No Blob store** — everything works except uploading new photos.
+
+Add `?debug=1` to the board URL — the overlay shows `source api` or
+`source static files`, so you can see which one it is using.
+
+### Keeping it safe
+
+- The password is the whole lock. Use something long and random, not the shop phone
+  number. Change it with `vercel env rm ADMIN_PASSWORD production` then `add` again.
+- Sign-in survives 12 hours, then asks again.
+- `GET /api/products` is public — that is just your price list, the same thing the TV
+  shows. Everything that **writes** requires the session cookie.
+- If you ever need separate logins for different staff, that is the point to move to a
+  real auth provider (Clerk installs through the Vercel Marketplace).
+
+---
+
+## 5. The admin panel — adding and editing products
 
 Open **`admin.html`** to manage products in a browser instead of editing JSON by hand.
-It runs from the same local server:
+Once the backend from section 4 is live, use the deployed URL
+(`https://your-project.vercel.app/admin.html`) and your changes go straight to the TV.
+
+Without a backend it still works against the local files. Run it from the local server:
 
 ```bash
 npx serve .
@@ -159,6 +269,12 @@ that card, even when both prices are set.
 
 ### Saving your changes
 
+**Deployed, with the backend from section 4** — sign in, hit **Save changes**, done.
+Photos upload to Blob and the prices go to the database. The TV updates itself; there
+is nothing to redeploy.
+
+The two options below are what happens when there is **no** backend yet.
+
 **In Chrome or Edge** — click **Connect project folder** once and pick the folder
 containing `index.html`. From then on **Save changes** writes `products.json` and any
 new photos straight into your project. Nothing to move by hand.
@@ -177,7 +293,7 @@ Either way the last step is the same: **redeploy** by dragging the folder to Net
 
 ---
 
-## 5. Updating prices and products later
+## 6. Updating prices and products later
 
 Everything you will ever change day-to-day is in the two JSON files. Edit them in any
 plain text editor (TextEdit in **Format → Make Plain Text**, or VS Code).
@@ -287,7 +403,7 @@ the TV. If you want it instantly, reload the page on the TV browser.
 
 ---
 
-## 6. Adding real product photos
+## 7. Adding real product photos
 
 The 24 images in `images/` are **stylised placeholder mockups** — simple drawn packs
 on a white background, there so the board looks complete before you have real photos.
@@ -390,7 +506,7 @@ illustration takes its place, so the banner is never empty.
 
 ---
 
-## 7. Design notes
+## 8. Design notes
 
 Colours are defined once at the top of `style.css` under `:root`, sampled from
 `reference.png`:
