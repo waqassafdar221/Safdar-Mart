@@ -9,7 +9,8 @@ clock · EVERYDAY ESSENTIALS hero banner · TODAY'S DEALS bar · **one row of 6 
 cards** that crossfades to the next 6 every few seconds · category strip that
 highlights the category currently on screen · footer with a scrolling ticker.
 
-Ships with 24 sample products so it works the moment you open it.
+Ships with 24 sample products **and 24 dummy product images**, so it looks finished
+the moment you open it. Swap in your real photos when you have them.
 
 ---
 
@@ -21,7 +22,7 @@ style.css         all styling, including the @font-face rules
 app.js            rotation, clock, ticker, category highlight, image fallbacks
 products.json     ← your products and prices (edit this)
 settings.json     ← store details, promo lines, all board wording (edit this)
-images/           logo.png, logo-mark.png + your product photos
+images/           logo, hero artwork + 24 dummy product photos
 fonts/            self-hosted Poppins + Caveat (.woff2)
 README.md         this file
 reference.png     the design this board was built to match (safe to delete)
@@ -238,6 +239,10 @@ the TV. If you want it instantly, reload the page on the TV browser.
 
 ## 5. Adding real product photos
 
+The 24 images in `images/` are **stylised dummy mockups** — simple drawn packs on a
+white background, there so the board looks complete before you have real photos.
+Replace them at your own pace; the board does not care which are real.
+
 Drop your photos into the **`images/`** folder and point each product's `image` field
 at the filename:
 
@@ -261,6 +266,10 @@ The name in `products.json` must match the file exactly, including capitals and 
 Photos are displayed with "contain" scaling, so a photo that is not exactly square is
 never cropped or stretched — it just letterboxes into the card. 4:3 and 3:4 both work
 fine. Very wide or very tall photos will look small, so crop them closer to square.
+
+**The easiest way to swap one in:** save your photo over the existing dummy file,
+keeping the same filename (e.g. replace `images/panadol.jpg` with your own
+`panadol.jpg`). Then you do not need to touch `products.json` at all.
 
 If a photo is missing, misspelled, or fails to download, that card shows a soft tinted
 block with the product name instead. Nothing breaks, so you can add photos gradually.
