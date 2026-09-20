@@ -394,7 +394,7 @@ can set once and forget.
 
 **Icon names** available for `categories`:
 `shield`, `family`, `cart`, `heart`, `capsule`, `bottle`, `baby`, `pulse`,
-`grocery`, `jar`, `lotus`, `leaf`, `sun`.
+`grocery`, `jar`, `bread`, `lotus`, `leaf`, `sun`.
 
 > **Tip:** paste the file into <https://jsonlint.com> after editing. One missing comma
 > will stop the board from loading, and it will sit on a "Loading offers…" screen.

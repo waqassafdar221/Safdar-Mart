@@ -33,6 +33,7 @@
     { "icon": "pulse",   "label": "Health & Wellness"   },
     { "icon": "grocery", "label": "Grocery & Household" },
     { "icon": "jar",     "label": "Nutrition"           },
+    { "icon": "bread",   "label": "Eatables"            },
     { "icon": "lotus",   "label": "Beauty"              }
   ],
   "categoryPanel": { "line1": "Good Health", "line2": "Brighter Days" },

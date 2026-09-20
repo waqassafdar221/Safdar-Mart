@@ -38,6 +38,7 @@
       { icon: 'pulse',   label: 'Health & Wellness'  },
       { icon: 'grocery', label: 'Grocery & Household'},
       { icon: 'jar',     label: 'Nutrition'          },
+      { icon: 'bread',   label: 'Eatables'           },
       { icon: 'lotus',   label: 'Beauty'             }
     ],
     categoryPanel: { line1: 'Good Health', line2: 'Brighter Days' },
@@ -50,7 +51,8 @@
   var ICONS = {
     shield: 'i-shield', family: 'i-family', cart: 'i-cart', heart: 'i-heart',
     capsule: 'i-capsule', bottle: 'i-bottle', baby: 'i-baby', pulse: 'i-heart-pulse',
-    grocery: 'i-cart-plus', jar: 'i-jar', lotus: 'i-lotus', leaf: 'i-leaf', sun: 'i-sun'
+    grocery: 'i-cart-plus', jar: 'i-jar', lotus: 'i-lotus', leaf: 'i-leaf', sun: 'i-sun',
+    bread: 'i-bread'
   };
 
   /* Deterministic soft tints for the missing-image placeholder blocks.
