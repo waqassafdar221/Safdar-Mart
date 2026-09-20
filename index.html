@@ -132,89 +132,17 @@
     <path d="M9.86 9.05c-.15-.35-.3-.35-.45-.36h-.38c-.13 0-.35.05-.53.25-.18.2-.7.68-.7 1.66s.72 1.92.82 2.05c.1.13 1.39 2.22 3.43 3.02 1.7.67 2.04.54 2.41.5.37-.03 1.2-.49 1.36-.96.17-.47.17-.87.12-.96-.05-.08-.18-.13-.38-.23-.2-.1-1.2-.59-1.38-.66-.19-.07-.32-.1-.45.1-.13.2-.52.66-.64.79-.12.13-.23.15-.43.05-.2-.1-.85-.31-1.62-1-.6-.53-1-1.19-1.12-1.39-.12-.2-.01-.3.09-.4.09-.09.2-.23.3-.35.1-.12.13-.2.2-.33.06-.13.03-.25-.02-.35-.05-.1-.44-1.1-.61-1.5z" fill="#fff"/>
   </symbol>
 
-  <!-- fallback hero artwork, used when images/hero.png is absent -->
-  <symbol id="i-hero-art" viewBox="0 0 220 150">
-    <ellipse cx="110" cy="132" rx="86" ry="12" fill="#000" opacity=".18"/>
-    <path d="M74 36h72a6 6 0 0 1 6 5.4l7.6 84A8 8 0 0 1 151.6 134H68.4a8 8 0 0 1-8-8.6l7.6-84A6 6 0 0 1 74 36z" fill="#C89B6A"/>
-    <path d="M74 36h72a6 6 0 0 1 6 5.4l1 11H67l1-11A6 6 0 0 1 74 36z" fill="#B0834F"/>
-    <path d="M89 42V30a21 21 0 0 1 42 0v12" fill="none" stroke="#B0834F" stroke-width="5" stroke-linecap="round"/>
-    <path d="M97 70h14V56h18v14h14v18h-14v14h-18V88H97z" fill="#1F8A36"/>
-    <path d="M97 70h14V56h18v14h14v18h-14v14h-18V88H97z" fill="none" stroke="#fff" stroke-width="3"/>
-    <rect x="38" y="60" width="26" height="62" rx="11" fill="#F2F7F3"/>
-    <rect x="41" y="80" width="20" height="20" rx="4" fill="#57B947"/>
-    <path d="M46 60v-9a5 5 0 0 1 10 0v9z" fill="#2F7D4A"/>
-    <g transform="rotate(24 176 74)">
-      <rect x="160" y="56" width="32" height="15" rx="7.5" fill="#57B947"/>
-      <rect x="160" y="71" width="32" height="15" rx="7.5" fill="#F2F7F3"/>
-    </g>
-    <circle cx="168" cy="110" r="13" fill="#2F7D4A"/>
-    <path d="M166 103h4v5h5v4h-5v5h-4v-5h-5v-4h5z" fill="#fff"/>
-  </symbol>
-
 </defs></svg>
 
 
 <div class="board">
 
-  <!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
-  <header class="hdr">
-
-    <div class="lockup">
-      <img class="lockup-mark" id="logo-mark" src="images/logo-mark.png" alt="">
-      <div class="lockup-copy">
-        <div class="lockup-name" id="store-name">SAFDAR &amp; SONS</div>
-        <div class="lockup-pill">
-          <span class="pill-a" id="pill-a">PHARMACY</span><span class="pill-b" id="pill-b">+ MART</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="script-tag">
-      <span class="script-l1" id="tagline-1">Your Health</span>
-      <span class="script-l2" id="tagline-2">Our Priority</span>
-      <svg class="swoosh" viewBox="0 0 210 16" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M4 12C46 4 140 1.5 206 6.5" fill="none" stroke="url(#sw)" stroke-width="4" stroke-linecap="round"/>
-        <linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#0B5D2E"/><stop offset="1" stop-color="#8CC63E"/></linearGradient>
-      </svg>
-    </div>
-
-    <ul class="trust" id="trust"></ul>
-
-    <div class="hdr-panel">
-      <div class="clock" id="clock">--:--</div>
-      <div class="hdr-panel-copy">
-        <span class="hp-1" id="hp-1">Better Care</span>
-        <span class="hp-2" id="hp-2">Brighter Lives</span>
-      </div>
-      <svg class="hp-leaf"><use href="#i-leaf"/></svg>
-    </div>
-
-  </header>
-
-  <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
-  <section class="hero">
-    <div class="hero-copy">
-      <div class="hero-t1" id="hero-t1">EVERYDAY</div>
-      <div class="hero-t2" id="hero-t2">ESSENTIALS</div>
-      <div class="hero-sub" id="hero-sub"></div>
-    </div>
-
-    <div class="hero-art" id="hero-art">
-      <svg class="hero-art-svg"><use href="#i-hero-art"/></svg>
-    </div>
-
-    <div class="hero-script">
-      <svg class="hs-heart hs-heart-a"><use href="#i-heart"/></svg>
-      <span id="hero-script-1">More Than a Pharmacy</span>
-      <span id="hero-script-2">A Part of Your Family</span>
-      <svg class="hs-heart hs-heart-b"><use href="#i-heart"/></svg>
-    </div>
-
-    <div class="hero-badge">
-      <svg class="hb-leaf"><use href="#i-leaf"/></svg>
-      <span class="hb-1" id="hb-1">SHOP HEALTHY</span>
-      <span class="hb-2" id="hb-2">LIVE BETTER</span>
-    </div>
+  <!-- ═══════════════════════════ SLIDER ═══════════════════════════ -->
+  <!-- Fills the height the old header + hero used to share, so everything
+       below it stays exactly where it was. Slides come from settings.slides. -->
+  <section class="slider">
+    <div class="slides" id="slides"></div>
+    <div class="slider-dots" id="slider-dots" hidden></div>
   </section>
 
   <!-- ═══════════════════════ TODAY'S DEALS BAR ═══════════════════════ -->

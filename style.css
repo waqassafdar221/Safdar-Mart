@@ -1,7 +1,7 @@
 /* =========================================================================
    Safdar & Sons Pharmacy + Mart — in-store signage board
-   Layout follows reference.png: header lockup + trust badges, hero banner,
-   TODAY'S DEALS bar, one row of 6 product cards, category strip, footer.
+   Layout, top to bottom: full-width banner slider, TODAY'S DEALS bar,
+   one row of 6 product cards, category strip, footer.
    Target 1920x1080; one root font-size drives every dimension, so any 16:9
    TV (1280x720 / 2560x1440 / 3840x2160) renders identically, just scaled.
    ========================================================================= */
@@ -49,7 +49,7 @@
 :root {
   --page-1:   #F3F7F4;   /* board background, top            */
   --page-2:   #E2ECE4;   /* board background, bottom         */
-  --dark:     #013D24;   /* deep brand green — panels, hero  */
+  --dark:     #013D24;   /* deep brand green — panels, slider */
   --dark-2:   #024E2A;
   --mid:      #0B6E33;
   --green:    #0E802F;   /* price plate / bright brand green */
@@ -112,255 +112,93 @@ svg     { fill: currentColor; }
     linear-gradient(180deg, var(--page-1) 0%, var(--page-2) 100%);
 }
 
-/* ═════════════════════════════════ HEADER ═════════════════════════════════ */
-.hdr {
-  flex: 0 0 auto;
-  height: 9.25rem;
-  display: flex;
-  align-items: stretch;
-  gap: 1.25rem;
-  padding-left: 0.875rem;
-  border-radius: var(--r-lg);
-  background: linear-gradient(90deg, #FFFFFF 0%, #EFF5F0 55%, #E4EEE6 100%);
-  box-shadow: 0 0.125rem 0.5rem rgba(1,61,36,.07);
-  overflow: hidden;
-}
-
-/* ---- logo lockup ---- */
-.lockup {
-  flex: 0 0 auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.75rem 1.25rem 0.75rem 0.875rem;
-  border-radius: var(--r-md);
-  background: #fff;
-  box-shadow: 0 0.0625rem 0.375rem rgba(1,61,36,.1);
-}
-.lockup-mark { width: 6.5rem; height: auto; }
-.lockup-mark.is-missing { display: none; }
-
-.lockup-copy { display: flex; flex-direction: column; gap: 0.3125rem; }
-
-.lockup-name {
-  font-weight: 800;
-  font-size: 2.375rem;
-  line-height: 1;
-  letter-spacing: -0.005em;
-  color: var(--dark);
-  white-space: nowrap;
-}
-.lockup-name .amp { color: var(--green-lt); }
-
-.lockup-pill {
-  display: flex;
-  align-items: stretch;
-  height: 1.875rem;
-  border-radius: 0.4375rem;
-  overflow: hidden;
-  font-weight: 700;
-  font-size: 1.0625rem;
-  letter-spacing: 0.02em;
-  color: #fff;
-}
-.pill-a {
-  display: flex; align-items: center;
-  padding: 0 1.5rem 0 1rem;
-  background: linear-gradient(90deg, #2BA83F, #37B54A);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 0.75rem) 100%, 0 100%);
-  margin-right: -0.75rem;
-}
-.pill-b {
-  display: flex; align-items: center;
-  flex: 1;
-  padding: 0 1rem 0 1.5rem;
-  background: var(--dark);
-}
-
-/* ---- handwritten tagline ---- */
-.script-tag {
-  flex: 0 0 auto;
-  align-self: center;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 0 0.5rem 0.75rem;
-  font-family: 'Caveat', 'Poppins', cursive;
-  font-weight: 700;
-  font-size: 2.125rem;
-  line-height: 1.02;
-  color: #0B5D2E;
-  white-space: nowrap;
-}
-.script-l2 { padding-left: 1.125rem; }
-.swoosh {
-  position: absolute;
-  left: 0.75rem; bottom: 0.0625rem;
-  width: 11rem; height: 0.75rem;
-  fill: none;
-}
-
-/* ---- trust badges ---- */
-.trust {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 0.5rem;
-  min-width: 0;
-}
-.trust li {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.375rem;
-  text-align: center;
-}
-.trust svg { width: 2.25rem; height: 2.25rem; color: var(--dark); }
-.trust span {
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.15;
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-/* ---- right angled panel: clock + strapline ---- */
-.hdr-panel {
+/* ═════════════════════════════════ SLIDER ═════════════════════════════════ */
+/* Takes over the height the header (9.25rem) and the hero (12.5rem) used to
+   share, plus the 0.625rem flex gap between them — 22.375rem — so the deals
+   bar, the product stage and everything below sit exactly where they did. */
+.slider {
   flex: 0 0 auto;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.1875rem;
-  width: 15.5rem;
-  padding: 0 1.25rem 0 2.5rem;
-  background: linear-gradient(160deg, #02492B 0%, var(--dark) 100%);
-  clip-path: polygon(2rem 0, 100% 0, 100% 100%, 0 100%);
-}
-.clock {
-  font-weight: 700;
-  font-size: 2.75rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  color: var(--lime);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-.hdr-panel-copy { display: flex; flex-direction: column; line-height: 1.12; }
-.hp-1 { font-weight: 700; font-size: 1.125rem; color: #fff; }
-.hp-2 { font-weight: 700; font-size: 1.125rem; color: var(--lime); }
-.hp-leaf {
-  position: absolute;
-  right: 0.875rem; top: 0.875rem;
-  width: 1.875rem; height: 1.875rem;
-  color: #7FC24A;
-}
-
-/* ═══════════════════════════════════ HERO ═══════════════════════════════════ */
-.hero {
-  flex: 0 0 auto;
-  position: relative;
-  height: 12.5rem;
-  display: flex;
-  align-items: center;
+  height: 22.375rem;
   border-radius: var(--r-lg);
   overflow: hidden;
   background: linear-gradient(100deg,
-    var(--dark) 0%, var(--dark) 22%, var(--dark-2) 40%, var(--mid) 60%, #2E9440 78%, #46A64B 100%);
+    var(--dark) 0%, var(--dark-2) 45%, var(--mid) 100%);
+  box-shadow: 0 0.125rem 0.5rem rgba(1,61,36,.07);
 }
 
-.hero-copy {
-  flex: 0 0 auto;
-  padding-left: 2.25rem;
-  width: 32%;
-}
-.hero-t1 {
-  font-weight: 800;
-  font-size: 3.125rem;
-  line-height: 0.98;
-  letter-spacing: -0.01em;
-  color: #fff;
-}
-.hero-t2 {
-  font-weight: 800;
-  font-size: 4.25rem;
-  line-height: 0.95;
-  letter-spacing: -0.015em;
-  color: var(--lime);
-}
-.hero-sub {
-  margin-top: 0.5rem;
-  font-weight: 600;
-  font-size: 1.3125rem;
-  color: #EAF6EC;
-  white-space: nowrap;
-}
-.hero-sub i { font-style: normal; color: #8FD07F; padding: 0 0.375rem; }
-
-.hero-art {
-  flex: 1 1 auto;
-  align-self: stretch;
+.slide {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  padding: 0;
+  opacity: 0;
+  transition: opacity 700ms linear;
+  will-change: opacity;
 }
-/* max-* rather than height:100% — the art must never overflow the banner */
-.hero-art img,
-.hero-art-svg {
+.slide.is-on { opacity: 1; }
+
+/* The banners are far wider than they are tall, but this slot is wider still,
+   so a blurred copy of the same artwork fills the side gutters. It is stretched
+   horizontally rather than zoomed, which keeps every band of the picture at its
+   own height — the foliage, the shelf and the table run straight through the
+   join, so the gutters read as more of the scene instead of as letterboxing.
+   The blur hides the stretch. Bleeding 2rem past every edge keeps the blur's
+   own soft edge outside the panel. */
+.slide-bg {
+  position: absolute;
+  inset: -2rem;
+  background-position: center;
+  background-size: 100% 100%;
+  filter: blur(2.5rem) brightness(.62) saturate(1.15);
+}
+
+/* height-driven, so the element box is the banner box and the drop shadow
+   lands on the artwork's own edges rather than on the panel's */
+.slide-img {
+  position: relative;
   width: auto;
-  height: auto;
+  height: 100%;
   max-width: 100%;
-  max-height: 100%;
   object-fit: contain;
+  box-shadow: 0 0 2.5rem rgba(0,0,0,.5);
 }
-.hero-art-svg { height: 94%; }
 
-.hero-script {
-  flex: 0 0 auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 20rem;
-  height: calc(100% - 1.5rem);
-  margin-right: 0.75rem;
-  padding: 0 1.25rem;
-  border-radius: var(--r-md);
-  background: rgba(240,247,241,.93);
-  font-family: 'Caveat', 'Poppins', cursive;
-  font-weight: 700;
-  font-size: 1.875rem;
-  line-height: 1.12;
-  color: #0B5D2E;
-  text-align: center;
-  white-space: nowrap;
+/* soft vignette, so the sharp banner reads as the front layer */
+.slider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 4rem rgba(1,61,36,.45);
 }
-.hs-heart { position: absolute; width: 1.25rem; height: 1.25rem; color: #4EA83C; }
-.hs-heart-a { top: 1.5rem;    left: 2.25rem; }
-.hs-heart-b { bottom: 1.5rem; right: 2.5rem; }
 
-.hero-badge {
-  flex: 0 0 auto;
-  position: relative;
+.slider-dots {
+  position: absolute;
+  z-index: 2;
+  left: 0; right: 0;
+  bottom: 0.875rem;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  width: 13.5rem;
-  height: calc(100% - 1.5rem);
-  margin-right: 0.75rem;
-  padding: 0 1.25rem;
-  border-radius: var(--r-md);
-  background: rgba(228,240,230,.88);
-  border: 1px solid rgba(255,255,255,.4);
+  gap: 0.5rem;
 }
-.hb-1 { font-weight: 800; font-size: 1.875rem; line-height: 1.02; color: #0B5D2E; }
-.hb-2 { font-weight: 500; font-size: 1.4375rem; line-height: 1.1; color: #4A6B55; letter-spacing: .01em; }
-.hb-leaf { position: absolute; top: 0.875rem; right: 1rem; width: 1.75rem; height: 1.75rem; color: #57B947; }
+.slider-dots[hidden] { display: none; }
+.slider-dots i {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,.45);
+  box-shadow: 0 0.0625rem 0.25rem rgba(1,61,36,.45);
+  transition: width 400ms linear, background 400ms linear;
+}
+.slider-dots i.is-on {
+  width: 2rem;
+  border-radius: 0.3125rem;
+  background: var(--lime);
+}
 
 /* ═════════════════════════════ TODAY'S DEALS BAR ═════════════════════════════ */
 .deals {
@@ -412,7 +250,7 @@ svg     { fill: currentColor; }
   position: absolute;
   inset: 0 0 1.625rem;
   opacity: 0;
-  transition: opacity 400ms linear;  /* the ONLY animated transition */
+  transition: opacity 400ms linear;  /* crossfade, like the slider above */
   will-change: opacity;
 }
 .layer.is-on { opacity: 1; }

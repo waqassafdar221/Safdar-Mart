@@ -23,20 +23,8 @@
     refreshMinutes: 15,
     reloadHours:    12,
 
-    headerPanel:  { line1: 'Better Care', line2: 'Brighter Lives' },
-    trustBadges: [
-      { icon: 'shield', line1: 'Genuine',   line2: 'Products'   },
-      { icon: 'family', line1: 'Healthy',   line2: 'Families'   },
-      { icon: 'cart',   line1: 'Everyday',  line2: 'Essentials' },
-      { icon: 'heart',  line1: 'A Healthier', line2: 'Tomorrow' }
-    ],
-
-    heroTitleTop:    'EVERYDAY',
-    heroTitleBottom: 'ESSENTIALS',
-    heroSubline:     'Quality Products | Great Prices | Healthier You',
-    heroScript:      'More Than a Pharmacy\nA Part of Your Family',
-    heroBadge:       { line1: 'SHOP HEALTHY', line2: 'LIVE BETTER' },
-    heroImage:       'images/hero.png',
+    slides:       ['images/slide-1.jpg', 'images/slide-2.jpg'],
+    slideSeconds: 8,
 
     dealsTitle:      "TODAY'S DEALS",
     dealsScript:     'Same Care. Better Savings.',
@@ -89,6 +77,10 @@
   var front       = 0;
   var flipTimer   = null;
   var nextFlipAt  = 0;
+  var slides      = [];
+  var slideIndex  = 0;
+  var slideTimer  = null;
+  var slideStamp  = '';
   var pendingData = null;
   var dataStamp   = '';
   var lastError   = '';
@@ -355,38 +347,7 @@
 
     document.title = s.storeName + ' ' + s.pharmacyLabel + ' ' + s.martLabel + " — Today's Deals";
 
-    /* header lockup — "&" picks up the lighter brand green */
-    $('store-name').innerHTML = esc(s.storeName).replace(/&amp;/g, '<span class="amp">&amp;</span>');
-    setText('pill-a', s.pharmacyLabel);
-    setText('pill-b', s.martLabel);
-
-    var tag = twoLines(s.tagline);
-    setText('tagline-1', tag[0]);
-    setText('tagline-2', tag[1]);
-
-    /* trust badges */
-    var badges = Array.isArray(s.trustBadges) ? s.trustBadges : DEFAULTS.trustBadges;
-    var html = '', i;
-    for (i = 0; i < badges.length; i++) {
-      html += '<li>' + iconHTML(badges[i].icon) +
-              '<span>' + esc(badges[i].line1) + '<br>' + esc(badges[i].line2) + '</span></li>';
-    }
-    $('trust').innerHTML = html;
-
-    setText('hp-1', (s.headerPanel || {}).line1);
-    setText('hp-2', (s.headerPanel || {}).line2);
-
-    /* hero */
-    setText('hero-t1', s.heroTitleTop);
-    setText('hero-t2', s.heroTitleBottom);
-    $('hero-sub').innerHTML = esc(s.heroSubline).replace(/\s*\|\s*/g, '<i>|</i>');
-
-    var hs = twoLines(s.heroScript);
-    setText('hero-script-1', hs[0]);
-    setText('hero-script-2', hs[1]);
-    setText('hb-1', (s.heroBadge || {}).line1);
-    setText('hb-2', (s.heroBadge || {}).line2);
-    paintHeroArt(s.heroImage);
+    buildSlider();
 
     /* deals bar */
     setText('deals-title', s.dealsTitle);
@@ -404,7 +365,7 @@
 
     /* category strip */
     var cats = Array.isArray(s.categories) ? s.categories : DEFAULTS.categories;
-    html = '';
+    var html = '', i;
     for (i = 0; i < cats.length; i++) {
       html += '<li data-cat="' + esc(String(cats[i].label).toLowerCase()) + '">' +
               iconHTML(cats[i].icon) + '<span>' + esc(cats[i].label) + '</span></li>';
@@ -418,15 +379,98 @@
     setText('foot-note', s.footerNote);
   }
 
-  function paintHeroArt(src) {
-    var host = $('hero-art');
-    var fallback = '<svg class="hero-art-svg"><use href="#i-hero-art"/></svg>';
-    if (!src) { host.innerHTML = fallback; return; }
+  /* -------------------------------- Slider ------------------------------ */
+  /* The banner strip at the top of the board. Every slide is stacked in the
+     same box and crossfaded by a class, so nothing ever reflows. A slide
+     whose image will not load drops out of the rotation; if none survive the
+     panel stays as the plain brand-green gradient. */
+  function buildSlider() {
+    var list = Array.isArray(settings.slides) ? settings.slides : DEFAULTS.slides;
+    var srcs = [], i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i]) { srcs.push(String(list[i])); }
+    }
 
-    host.innerHTML = '<img src="' + esc(src) + '" alt="">';
-    var img = host.firstChild;
-    img.addEventListener('error', function () { host.innerHTML = fallback; });
-    if (img.complete && img.naturalWidth === 0) { host.innerHTML = fallback; }
+    /* paintChrome runs on every data refresh — leave a running rotation
+       alone unless the pictures themselves changed */
+    var stamp = srcs.join('|');
+    if (stamp === slideStamp) { return; }
+    slideStamp = stamp;
+
+    window.clearTimeout(slideTimer);
+    slideIndex = 0;
+
+    var host = $('slides');
+    var html = '';
+    for (i = 0; i < srcs.length; i++) {
+      html += '<div class="slide' + (i === 0 ? ' is-on' : '') + '">' +
+                '<div class="slide-bg"></div>' +
+                '<img class="slide-img" src="' + esc(srcs[i]) + '" alt="">' +
+              '</div>';
+    }
+    host.innerHTML = html;
+
+    slides = [];
+    for (i = 0; i < host.children.length; i++) { slides.push(host.children[i]); }
+
+    for (i = 0; i < slides.length; i++) { prepareSlide(slides[i], srcs[i]); }
+
+    paintDots();
+    scheduleSlide();
+  }
+
+  function prepareSlide(slide, src) {
+    /* set via the DOM, so a path with a quote in it cannot break the rule */
+    slide.firstChild.style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")';
+
+    var img = slide.lastChild;
+    img.addEventListener('error', function () { dropSlide(slide); });
+    if (img.complete && img.naturalWidth === 0) { dropSlide(slide); }
+  }
+
+  function dropSlide(slide) {
+    var at = slides.indexOf(slide);
+    if (at === -1) { return; }
+
+    slides.splice(at, 1);
+    if (slide.parentNode) { slide.parentNode.removeChild(slide); }
+
+    if (slideIndex >= slides.length) { slideIndex = 0; }
+    if (slides.length) { slides[slideIndex].classList.add('is-on'); }
+
+    paintDots();
+    scheduleSlide();
+  }
+
+  function paintDots() {
+    var dots = $('slider-dots');
+    dots.hidden = slides.length < 2;
+
+    var html = '';
+    for (var i = 0; i < slides.length; i++) {
+      html += '<i' + (i === slideIndex ? ' class="is-on"' : '') + '></i>';
+    }
+    dots.innerHTML = html;
+  }
+
+  function nextSlide() {
+    if (slides.length < 2) { scheduleSlide(); return; }
+
+    slides[slideIndex].classList.remove('is-on');
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add('is-on');
+
+    paintDots();
+    scheduleSlide();
+  }
+
+  function scheduleSlide() {
+    window.clearTimeout(slideTimer);
+    if (slides.length < 2) { return; }
+
+    var secs = isNum(settings.slideSeconds) && settings.slideSeconds > 0
+      ? settings.slideSeconds : DEFAULTS.slideSeconds;
+    slideTimer = window.setTimeout(nextSlide, secs * 1000);
   }
 
   /* -------------------------------- Ticker ------------------------------ */
@@ -475,13 +519,6 @@
 
     track.style.animation = '';
     void track.offsetWidth;
-  }
-
-  /* -------------------------------- Clock ------------------------------- */
-  function tickClock() {
-    var now = new Date();
-    var h = now.getHours(), m = now.getMinutes();
-    setText('clock', (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m);
   }
 
   /* -------------------------------- Status ------------------------------ */
@@ -546,12 +583,7 @@
   }
 
   function init() {
-    var mark = $('logo-mark');
-    mark.addEventListener('error', function () { mark.classList.add('is-missing'); });
-
     paintChrome();                        // draw defaults immediately
-    tickClock();
-    window.setInterval(tickClock, 1000);
 
     if (DEBUG) {
       elDebug.hidden = false;
@@ -573,7 +605,9 @@
 
     /* Background throttling can stall timers; resync when we come back. */
     document.addEventListener('visibilitychange', function () {
-      if (!document.hidden && pages.length) { schedule(); }
+      if (document.hidden) { return; }
+      if (pages.length) { schedule(); }
+      scheduleSlide();
     });
 
     /* One slow housekeeping tick drives both the price refresh and the

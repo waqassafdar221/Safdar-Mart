@@ -18,20 +18,8 @@
   "refreshMinutes": 15,
   "reloadHours": 12,
 
-  "headerPanel": { "line1": "Better Care", "line2": "Brighter Lives" },
-  "trustBadges": [
-    { "icon": "shield", "line1": "Genuine",     "line2": "Products"   },
-    { "icon": "family", "line1": "Healthy",     "line2": "Families"   },
-    { "icon": "cart",   "line1": "Everyday",    "line2": "Essentials" },
-    { "icon": "heart",  "line1": "A Healthier", "line2": "Tomorrow"   }
-  ],
-
-  "heroTitleTop": "EVERYDAY",
-  "heroTitleBottom": "ESSENTIALS",
-  "heroSubline": "Quality Products | Great Prices | Healthier You",
-  "heroScript": "More Than a Pharmacy\nA Part of Your Family",
-  "heroBadge": { "line1": "SHOP HEALTHY", "line2": "LIVE BETTER" },
-  "heroImage": "images/hero.png",
+  "slides": ["images/slide-1.jpg", "images/slide-2.jpg"],
+  "slideSeconds": 8,
 
   "dealsTitle": "TODAY'S DEALS",
   "dealsScript": "Same Care. Better Savings.",
