@@ -4,10 +4,10 @@ A single-page offer board for the shop TV, built to match `reference.png`. Plain
 HTML/CSS/JS — no build step, no framework, no server code. Drop the folder on any
 static host, open the URL on the Android TV browser, and it runs forever on its own.
 
-**Layout, top to bottom:** logo lockup + handwritten tagline + trust badges + live
-clock · EVERYDAY ESSENTIALS hero banner · TODAY'S DEALS bar · **one row of 6 product
-cards** that crossfades to the next 6 every few seconds · category strip that
-highlights the category currently on screen · footer with a scrolling ticker.
+**Layout, top to bottom:** a full-width banner slider that crossfades between your
+promo artwork · TODAY'S DEALS bar · **one row of 6 product cards** that crossfades to
+the next 6 every few seconds · category strip that highlights the category currently
+on screen · footer with a scrolling ticker.
 
 Ships with 24 sample products **and 24 dummy product images**, so it looks finished
 the moment you open it. Swap in your real photos when you have them.
@@ -19,10 +19,10 @@ the moment you open it. Swap in your real photos when you have them.
 ```
 index.html        the page, plus the inline SVG icon set
 style.css         all styling, including the @font-face rules
-app.js            rotation, clock, ticker, category highlight, image fallbacks
+app.js            banner slider, page rotation, ticker, category highlight, fallbacks
 products.json     ← your products and prices (edit this)
 settings.json     ← store details, promo lines, all board wording (edit this)
-images/           logo, hero artwork + 24 dummy product photos
+images/           logo, the two banner slides + 24 dummy product photos
 fonts/            self-hosted Poppins + Caveat (.woff2)
 admin.html        the admin panel — add/edit products in a browser
 admin.css
@@ -34,7 +34,10 @@ vercel.json       cache headers
 prepare-photos.py turns a whole folder of phone photos into board-ready images
 README.md         this file
 reference.png     the design this board was built to match (safe to delete)
-hero section.png  the original hero artwork (safe to delete — already cut out)
+hero section.png  artwork from the old hero banner (safe to delete — unused)
+slide 1.png       full-size sources for the two banner slides
+slide 2 updated.png   (safe to delete — already converted into images/)
+slide 2.png       the superseded second banner (safe to delete)
 logo.jpeg         your original logo (safe to delete — already converted)
 ```
 
@@ -156,7 +159,7 @@ This is deployed and running. You do not need to set it up again.
 |---|---|
 | **Board (for the TV)** | https://safdar-sons-board.vercel.app |
 | **Admin panel** | https://safdar-sons-board.vercel.app/admin.html |
-| **Password** | `marble-willow-cedar-2301` — change it, see below |
+| **Password** | `SafdarMart@123` — change it, see below |
 | Database | Neon Postgres `neon-violet-diamond` — holds the products |
 | Image store | Vercel Blob `safdar-board-images` — holds uploaded photos |
 | Project | `safdar-sons-board` on Vercel, auto-deploys from `main` |
@@ -379,20 +382,17 @@ can set once and forget.
 
 | Key | Where it shows |
 |---|---|
-| `storeName`, `pharmacyLabel`, `martLabel` | The header logo lockup |
-| `tagline` | The handwritten line next to the logo. `\n` splits it over two lines |
-| `trustBadges` | The four icon + label items across the header |
-| `headerPanel` | "Better Care / Brighter Lives" in the dark panel with the clock |
-| `heroTitleTop`, `heroTitleBottom`, `heroSubline` | "EVERYDAY / ESSENTIALS" and the line under it |
-| `heroScript`, `heroBadge` | The two panels on the right of the hero banner |
-| `heroImage` | Optional hero photo — see below |
+| `storeName`, `pharmacyLabel`, `martLabel` | The browser tab title |
+| `tagline` | Falls back into the footer ticker when there is nothing else to scroll. `\n` splits it over two lines |
+| `slides` | The banner pictures at the top of the board — see below |
+| `slideSeconds` | How long each banner stays up before it crossfades. Default `8` |
 | `dealsTitle`, `dealsScript`, `dealsNote` | The TODAY'S DEALS bar |
 | `categories` | The tiles in the category strip |
 | `categoryPanel` | "Good Health / Brighter Days" at the end of that strip |
 | `footerTag`, `footerNote` | The two ends of the footer bar |
 | `refreshMinutes`, `reloadHours` | How often the TV looks for new prices / fully reloads. Defaults are fine |
 
-**Icon names** available for `trustBadges` and `categories`:
+**Icon names** available for `categories`:
 `shield`, `family`, `cart`, `heart`, `capsule`, `bottle`, `baby`, `pulse`,
 `grocery`, `jar`, `lotus`, `leaf`, `sun`.
 
@@ -495,25 +495,63 @@ block with the product name instead. Nothing breaks, so you can add photos gradu
 
 Two files, both already in place:
 
-- **`images/logo-mark.png`** — just the green S+S symbol, used in the header lockup
-  next to the "SAFDAR & SONS" wordmark. Transparent background.
+- **`images/logo-mark.png`** — the green S+S symbol, used in the admin panel header.
+  Transparent background.
 - **`images/logo.png`** — your full square logo, used as the browser tab icon.
 
 To replace them, overwrite the files with the same names. `logo-mark.png` should be
 the symbol only, on a transparent background, roughly 3:2 landscape.
 
-### The hero photo
+### The banner slides
 
-**`images/hero.png`** is the artwork in the green banner — your S+S product-bag photo,
-cut out of its background so it sits directly on the banner's green gradient. It was
-made from `hero section.png`; the two handwritten lines in that original are rendered
-by the board as live text instead, so they stay crisp at any resolution and can be
-edited in `settings.json`.
+The strip across the top of the board is a slider. It shows each picture in `slides`
+for `slideSeconds`, then crossfades to the next one and loops forever:
 
-To swap it for a different picture — a shelf shot, a seasonal promo — save a
-**transparent PNG** as `images/hero.png`, roughly 760 × 480 px. Point `heroImage` at a
-different filename if you prefer. Delete the file and a drawn shopping-bag
-illustration takes its place, so the banner is never empty.
+```json
+"slides": ["images/slide-1.jpg", "images/slide-2.jpg"],
+"slideSeconds": 8
+```
+
+Add a third entry for a seasonal banner, or cut the list down to one — with a single
+slide the dots disappear and the picture simply stays put. A slide whose file is
+missing drops out of the rotation on its own, so a typo never leaves a blank panel.
+
+**The slot is 5.27:1** — far wider than it is tall. That is 1888 × 358 px on a 1080p
+TV, 2832 × 537 at 1440p, 3776 × 716 at 4K; any of those ratios is the same shape, so
+match the shape and pick the size from the screen you are running on.
+
+A banner cut to 5.27:1 fills the panel edge to edge, which is what you want. Anything
+narrower is never cropped — the whole picture is always shown, and a blurred, stretched
+copy of the same artwork fills the space left over at the sides so the background of
+the picture still runs through to the edges of the board. That fallback also covers
+screens that are not 16:9, where the panel is a little wider than 5.27:1.
+
+`images/slide-1.jpg` is the full 2.33:1 artwork, so it shows with those blurred sides.
+`images/slide-2.jpg` was centre-cropped to 5.27:1 first, so it fills the panel — its
+artwork sits in the middle of the frame with the leaf canopy and the table to spare
+above and below, which is exactly what makes a crop like that possible:
+
+```bash
+python3 - <<'EOF'
+from PIL import Image
+im = Image.open('slide 2 updated.png').convert('RGB')
+W, H = im.size
+band = round(W / (118/22.375))          # the panel's aspect ratio
+im.crop((0, (H-band)//2, W, (H-band)//2 + band)).save(
+    'images/slide-2.jpg', quality=88, optimize=True, progressive=True)
+EOF
+```
+
+Slide 1 cannot take the same crop: its headline and its lower row of bottles run the
+full height of the frame, so trimming to 5.27:1 slices through both. To make it fill
+the panel too, it needs re-exporting at 5.27:1 rather than cropping.
+
+For a slide that keeps its full height, macOS `sips` converts a PNG source without
+cropping — full resolution, JPEG quality 88, which takes 2.3 MB down to about 660 KB:
+
+```bash
+sips -s format jpeg -s formatOptions 88 "slide 1.png" --out images/slide-1.jpg
+```
 
 ---
 
@@ -525,9 +563,9 @@ Colours are defined once at the top of `style.css` under `:root`, sampled from
 | Token | Colour | Used for |
 |---|---|---|
 | `--page-1` / `--page-2` | `#F3F7F4` → `#E2ECE4` | Board background |
-| `--dark` | `#013D24` | Hero, angled panels, footer tag |
+| `--dark` | `#013D24` | Slider backdrop, angled panels, footer tag |
 | `--green` | `#0E802F` | Price plate, active category tile |
-| `--lime` | `#C6E85C` | Prices, "ESSENTIALS", the clock |
+| `--lime` | `#C6E85C` | Prices, the active slider dot |
 | `--red` | `#E12E2B` | Discount badge |
 | `--card` | `#FFFFFF` | Product cards |
 

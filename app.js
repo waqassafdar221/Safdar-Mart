@@ -412,10 +412,13 @@
 
     slides = [];
     for (i = 0; i < host.children.length; i++) { slides.push(host.children[i]); }
-
-    for (i = 0; i < slides.length; i++) { prepareSlide(slides[i], srcs[i]); }
-
     paintDots();
+
+    /* walk a copy: an image that has already failed drops its slide out of
+       `slides` from under us, and the srcs would stop lining up */
+    var built = slides.slice();
+    for (i = 0; i < built.length; i++) { prepareSlide(built[i], srcs[i]); }
+
     scheduleSlide();
   }
 
