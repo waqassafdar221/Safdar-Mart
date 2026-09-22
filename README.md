@@ -35,9 +35,11 @@ prepare-photos.py turns a whole folder of phone photos into board-ready images
 README.md         this file
 reference.png     the design this board was built to match (safe to delete)
 hero section.png  artwork from the old hero banner (safe to delete — unused)
-slide 1.png       full-size sources for the two banner slides
+updated slide 1.png   full-size sources for the two banner slides
 slide 2 updated.png   (safe to delete — already converted into images/)
-slide 2.png       the superseded second banner (safe to delete)
+slide 1.png       superseded banner artwork (safe to delete)
+slide 1 updated.png
+slide 2.png
 logo.jpeg         your original logo (safe to delete — already converted)
 ```
 
@@ -526,10 +528,10 @@ copy of the same artwork fills the space left over at the sides so the backgroun
 the picture still runs through to the edges of the board. That fallback also covers
 screens that are not 16:9, where the panel is a little wider than 5.27:1.
 
-`images/slide-1.jpg` is the full 2.33:1 artwork, so it shows with those blurred sides.
-`images/slide-2.jpg` was centre-cropped to 5.27:1 first, so it fills the panel — its
-artwork sits in the middle of the frame with the leaf canopy and the table to spare
-above and below, which is exactly what makes a crop like that possible:
+Both slides are cut to 5.27:1, so both fill the panel. `images/slide-2.jpg` was simply
+centre-cropped — its artwork sits in the middle of the frame with the leaf canopy and
+the table to spare above and below, which is exactly what makes a crop like that
+possible:
 
 ```bash
 python3 - <<'EOF'
@@ -542,15 +544,49 @@ im.crop((0, (H-band)//2, W, (H-band)//2 + band)).save(
 EOF
 ```
 
-Slide 1 cannot take the same crop: its headline and its lower row of bottles run the
-full height of the frame, so trimming to 5.27:1 slices through both. To make it fill
-the panel too, it needs re-exporting at 5.27:1 rather than cropping.
-
-For a slide that keeps its full height, macOS `sips` converts a PNG source without
-cropping — full resolution, JPEG quality 88, which takes 2.3 MB down to about 660 KB:
+Slide 1 cannot take the same crop. Its source arrives letterboxed — white above and
+below the artwork — and what is left after the white bands come off is still too tall
+for the panel, with the logo hard against the top and the bottles against the bottom,
+so a centre crop slices through both. It is built the other way round instead: trim
+the white, take the few pixels that are genuinely spare above the logo and below the
+bottles' reflections, then *widen* the frame to 5.27:1 with a wing on each side — a
+mirrored, heavily blurred copy of the edge foliage, so the scene runs on to the board's
+edge instead of stopping at a seam. The numbers below are for the current source; a new
+one needs its own white-band rows and its own two crop margins:
 
 ```bash
-sips -s format jpeg -s formatOptions 88 "slide 1.png" --out images/slide-1.jpg
+python3 - <<'EOF'
+from PIL import Image, ImageFilter, ImageEnhance
+src = Image.open('updated slide 1.png').convert('RGB')
+art = src.crop((0, 155 + 16, 2172, 155 + 458))   # white bands off, then the spare rows
+w, h = art.size
+target = round(h * (118/22.375))                 # the panel's aspect ratio
+padl = (target - w) // 2
+padr = target - w - padl
+
+def wing(strip, width):
+    s = strip.resize((360, h), Image.LANCZOS).transpose(Image.FLIP_LEFT_RIGHT)
+    s = s.filter(ImageFilter.GaussianBlur(45))
+    s = ImageEnhance.Brightness(s).enhance(0.90)
+    s = ImageEnhance.Color(s).enhance(1.12)
+    return s.resize((width, h), Image.LANCZOS)
+
+out = Image.new('RGB', (target, h))
+out.paste(wing(art.crop((0, 0, 260, h)), padl), (0, 0))
+out.paste(art, (padl, 0))
+out.paste(wing(art.crop((w - 260, 0, w, h)), padr), (padl + w, 0))
+out.save('images/slide-1.jpg', quality=88, optimize=True, progressive=True)
+EOF
+```
+
+To find the white bands in a new source, walk the rows in from the top and the bottom
+until one stops being solid white; that first and last non-white row are the crop.
+
+For a new banner that is already exported at 5.27:1, neither step is needed — macOS
+`sips` converts the PNG straight across at full resolution, JPEG quality 88:
+
+```bash
+sips -s format jpeg -s formatOptions 88 "my banner.png" --out images/slide-3.jpg
 ```
 
 ---
